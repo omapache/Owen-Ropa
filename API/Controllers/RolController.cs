@@ -46,11 +46,11 @@ public class RolController : BaseApiController
     [MapToApiVersion("1.1")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Pager<RolDto>>> GetPagination([FromQuery] Params paisParams)
+    public async Task<ActionResult<Pager<RolDto>>> GetPagination([FromQuery] Params EntidadParams)
     {
-        var entidad = await unitofwork.Roles.GetAllAsync(paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+        var entidad = await unitofwork.Roles.GetAllAsync(EntidadParams.PageIndex, EntidadParams.PageSize, EntidadParams.Search);
         var listEntidad = mapper.Map<List<RolDto>>(entidad.registros);
-        return new Pager<RolDto>(listEntidad, entidad.totalRegistros, paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+        return new Pager<RolDto>(listEntidad, entidad.totalRegistros, EntidadParams.PageIndex, EntidadParams.PageSize, EntidadParams.Search);
     }
 
     [HttpPost]

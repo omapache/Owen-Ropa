@@ -8,6 +8,5 @@ public class Insumo : BaseEntity
 
     public ICollection<Proveedor> Proveedores { get; set; } = new HashSet<Proveedor>();
     public ICollection<InsumoProveedor> InsumoProveedores { get; set;}
-/*     public ICollection<Prenda> Prendas { get; set; } = new HashSet<Prenda>();
- */    public ICollection<InsumoPrenda> InsumoPrendas { get; set;}
+    public ICollection<InsumoPrenda> InsumoPrendas { get; set;}
 }

@@ -16,7 +16,7 @@ public interface IUnitOfWork
     IGenero Generos { get; }
     IInsumo Insumos { get; }
     IInsumoPrenda InsumoPrendas { get; }
-    IInsumoProveedor InsumoProveedor { get; }
+    IInsumoProveedor InsumoProveedores { get; }
     IRol Roles { get; }
     IInventario Inventarios { get; }
     IInventarioTalla InventarioTallas { get; }

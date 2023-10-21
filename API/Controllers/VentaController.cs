@@ -10,8 +10,8 @@ namespace API.Controllers;
 
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
-[Authorize]
-public class VentaController : BaseApiController
+/* [Authorize]
+ */public class VentaController : BaseApiController
 {
     private readonly IUnitOfWork unitofwork;
     private readonly  IMapper mapper;
@@ -53,7 +53,15 @@ public class VentaController : BaseApiController
         var listEntidad = mapper.Map<List<VentaDto>>(entidad.registros);
         return new Pager<VentaDto>(listEntidad, entidad.totalRegistros, EntidadParams.PageIndex, EntidadParams.PageSize, EntidadParams.Search);
     }
-
+    [HttpGet("consulta7/{IdEmpleado}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> Consulta7(string IdEmpleado)
+    {
+        var entidad = await unitofwork.Ventas.Consulta7(IdEmpleado);
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

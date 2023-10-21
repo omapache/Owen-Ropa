@@ -16,7 +16,8 @@ public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
         
         builder.Property(p => p.IdCliente)
         .HasColumnName("idCliente")
-        .HasColumnType("int")
+        .HasColumnType("varchar")
+        .HasMaxLength(255)
         .IsRequired();
 
         builder.Property(p => p.Nombre)

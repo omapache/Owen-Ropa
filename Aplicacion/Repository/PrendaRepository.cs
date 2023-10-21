@@ -41,4 +41,47 @@ public class PrendaRepository : GenericRepo<Prenda>, IPrenda
 
         return (totalRegistros, registros);
     }
+    public async Task<object> Consulta2(string NroOrdenProduccion)
+    {
+        var consulta = 
+        from d in _context.DetalleOrdenes 
+        join e in _context.Estados on d.IdEstadoFk equals e.Id
+        join p in _context.Prendas on d.IdPrendaFk equals p.Id
+        where e.Descripcion == "produccion"
+        where d.Orden.Id.ToString().Contains(NroOrdenProduccion)
+        select new
+        {
+            IdPrenda= p.IdPrenda,
+            NombrePrenda= p.Nombre,
+            valorUnitCop = p.ValorUnitCop,
+            ValorUnitUsd = p.ValorUnitUsd,
+            TipoProteccion = p.TipoProteccion.Descripcion,
+            Genero = p.Genero.Descripcion,
+        };
+
+        var entidad = await consulta.ToListAsync();
+        return entidad;
+    }
+    public async Task<object> Consulta3()
+    {
+        var consulta = 
+        from e in _context.TipoProtecciones 
+        select new
+        {
+            NombreEspecie = e.Descripcion,
+            prendas = (from m in _context.Prendas
+                        where m.IdTipoProteccionFk == e.Id
+                        select new
+                        {
+                            IdPrenda = m.IdPrenda,
+                            Nombre = m.Nombre,
+                            ValorUnitCop = m.ValorUnitCop,
+                            ValorUnitUsd = m.ValorUnitUsd,
+                        }).ToList()
+        };
+
+        var entidad = await consulta.ToListAsync();
+        return entidad;
+    }
+    
 }

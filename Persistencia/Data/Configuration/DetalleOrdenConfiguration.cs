@@ -14,10 +14,9 @@ public class DetalleOrdenConfiguration : IEntityTypeConfiguration<DetalleOrden>
         builder.Property(p => p.Id)
         .IsRequired();
         
-        builder.Property(p => p.IdDetalleOrden)
-        .HasColumnName("idDetalleOrden")
-        .HasColumnType("int")
-        .IsRequired();
+        builder.HasOne(p => p.Orden)
+        .WithMany(p => p.DetalleOrdenes)
+        .HasForeignKey(p => p.IdDetalleOrdenFk);
 
         builder.HasOne(p => p.Prenda)
         .WithMany(p => p.DetalleOrdenes)

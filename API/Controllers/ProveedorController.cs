@@ -10,8 +10,8 @@ namespace API.Controllers;
 
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
-[Authorize]
-public class ProveedorController  : BaseApiController
+/* [Authorize]
+ */public class ProveedorController  : BaseApiController
 {
     private readonly IUnitOfWork unitofwork;
     private readonly  IMapper mapper;
@@ -53,7 +53,15 @@ public class ProveedorController  : BaseApiController
         var listEntidad = mapper.Map<List<ProveedorDto>>(entidad.registros);
         return new Pager<ProveedorDto>(listEntidad, entidad.totalRegistros, EntidadParams.PageIndex, EntidadParams.PageSize, EntidadParams.Search);
     }
-
+    [HttpGet("consulta1")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> Consulta1()
+    {
+        var entidad = await unitofwork.Proveedores.Consulta1();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

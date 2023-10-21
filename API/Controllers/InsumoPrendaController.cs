@@ -10,8 +10,8 @@ namespace API.Controllers;
 
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
-[Authorize]
-public class InsumoPrendaController : BaseApiController
+/* [Authorize]
+ */public class InsumoPrendaController : BaseApiController
 {
     private readonly IUnitOfWork unitofwork;
     private readonly  IMapper mapper;
@@ -54,6 +54,15 @@ public class InsumoPrendaController : BaseApiController
         return new Pager<InsumoPrendaDto>(listEntidad, entidad.totalRegistros, EntidadParams.PageIndex, EntidadParams.PageSize, EntidadParams.Search);
     }
 
+    [HttpGet("consulta5/{IdPrenda}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> Consulta5(string IdPrenda)
+    {
+        var entidad = await unitofwork.InsumoPrendas.Consulta5(IdPrenda);
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

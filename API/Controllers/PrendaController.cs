@@ -10,8 +10,8 @@ namespace API.Controllers;
 
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
-[Authorize]
-public class PrendaController  : BaseApiController
+/* [Authorize]
+ */public class PrendaController  : BaseApiController
 {
     private readonly IUnitOfWork unitofwork;
     private readonly  IMapper mapper;
@@ -53,7 +53,24 @@ public class PrendaController  : BaseApiController
         var listEntidad = mapper.Map<List<PrendaDto>>(entidad.registros);
         return new Pager<PrendaDto>(listEntidad, entidad.totalRegistros, EntidadParams.PageIndex, EntidadParams.PageSize, EntidadParams.Search);
     }
-
+    [HttpGet("consulta2/{NroOrdenProduccion}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> Consulta2(string NroOrdenProduccion)
+    {
+        var entidad = await unitofwork.Prendas.Consulta2(NroOrdenProduccion);
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
+    [HttpGet("consulta3")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> Consulta3()
+    {
+        var entidad = await unitofwork.Prendas.Consulta3();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

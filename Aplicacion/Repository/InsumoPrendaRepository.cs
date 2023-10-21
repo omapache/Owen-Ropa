@@ -41,4 +41,33 @@ public class InsumoPrendaRepository  : GenericRepo<InsumoPrenda>, IInsumoPrenda
 
         return (totalRegistros, registros);
     }
+    public async Task<object> Consulta5(string IdPrenda)
+    {
+        var consulta = 
+        from e in _context.InsumoPrendas 
+        join p in _context.Prendas on e.IdPrendaFk equals p.Id
+        join i in _context.Insumos on e.IdInsumoFk equals i.Id
+        where p.IdPrenda.Equals(IdPrenda)
+        select new
+        {
+            IdPrenda= p.IdPrenda,
+            NombrePrenda= p.Nombre,
+            Insumos = (from m in _context.Insumos
+                        where m.Id == e.IdInsumoFk
+                        select new
+                        {
+                            Nombre = i.Nombre,
+                            costo = i.ValorUnitario,
+                        }).ToList(),
+            Cantidad = (from m in _context.Insumos
+                        where m.Id == e.IdInsumoFk
+                        select new
+                        {
+                            total = m.ValorUnitario * e.Cantidad
+                        }).Sum(x=>x.total)
+        };
+
+        var entidad = await consulta.ToListAsync();
+        return entidad;
+    }
 }

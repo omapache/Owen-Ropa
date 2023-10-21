@@ -362,7 +362,8 @@ namespace Persistencia.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    idCliente = table.Column<int>(type: "int", nullable: false),
+                    idCliente = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     nombre = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IdTipoPersonaFk = table.Column<int>(type: "int", nullable: false),
@@ -665,13 +666,12 @@ namespace Persistencia.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    idDetalleOrden = table.Column<int>(type: "int", nullable: false),
+                    IdDetalleOrdenFk = table.Column<int>(type: "int", nullable: false),
                     IdPrendaFk = table.Column<int>(type: "int", nullable: false),
                     CantidadProducir = table.Column<int>(type: "int", nullable: false),
                     IdColorFk = table.Column<int>(type: "int", nullable: false),
                     cantidadProducida = table.Column<int>(type: "int", nullable: false),
-                    IdEstadoFk = table.Column<int>(type: "int", nullable: false),
-                    OrdenId = table.Column<int>(type: "int", nullable: true)
+                    IdEstadoFk = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -689,10 +689,11 @@ namespace Persistencia.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_detalleOrden_orden_OrdenId",
-                        column: x => x.OrdenId,
+                        name: "FK_detalleOrden_orden_IdDetalleOrdenFk",
+                        column: x => x.IdDetalleOrdenFk,
                         principalTable: "orden",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_detalleOrden_prenda_IdPrendaFk",
                         column: x => x.IdPrendaFk,
@@ -760,6 +761,11 @@ namespace Persistencia.Data.Migrations
                 column: "IdColorFk");
 
             migrationBuilder.CreateIndex(
+                name: "IX_detalleOrden_IdDetalleOrdenFk",
+                table: "detalleOrden",
+                column: "IdDetalleOrdenFk");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_detalleOrden_IdEstadoFk",
                 table: "detalleOrden",
                 column: "IdEstadoFk");
@@ -768,11 +774,6 @@ namespace Persistencia.Data.Migrations
                 name: "IX_detalleOrden_IdPrendaFk",
                 table: "detalleOrden",
                 column: "IdPrendaFk");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_detalleOrden_OrdenId",
-                table: "detalleOrden",
-                column: "OrdenId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_detalleVenta_IdTallaFk",

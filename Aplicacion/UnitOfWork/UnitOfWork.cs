@@ -188,7 +188,7 @@ public class UnitOfWork  : IUnitOfWork, IDisposable
         }
     }
 
-    public IInsumoProveedor InsumoProveedor 
+    public IInsumoProveedor InsumoProveedores 
     {
         get{
             if(_insumoProveedores== null)

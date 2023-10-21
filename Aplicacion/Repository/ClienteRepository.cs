@@ -41,4 +41,50 @@ public class ClienteRepository : GenericRepo<Cliente>, ICliente
 
         return (totalRegistros, registros);
     }
+    public async Task<object> Consulta4(string idCliente)
+    {
+        var consulta = 
+        from e in _context.DetalleOrdenes 
+        join o in  _context.Ordenes on e.IdDetalleOrdenFk equals o.Id
+        join c in  _context.Clientes on o.IdClienteFk equals c.Id
+        where c.IdCliente.Contains(idCliente)
+        select new
+        {
+            NombreCliente = c.Nombre,
+            Municipio = c.Municipio.Nombre,
+
+            Detalle = (from m in _context.Ordenes
+                        join p in _context.Prendas on e.IdPrendaFk equals p.Id
+                        where m.Id == e.IdDetalleOrdenFk
+                        select new
+                        {
+                            codigo = p.IdPrenda,
+                            prenda = p.Nombre,
+                            totalPesos = e.CantidadProducida * p.ValorUnitCop,
+                            totalDolares = e.CantidadProducida * p.ValorUnitUsd,
+                            
+                        }).ToList(),
+            
+            ValorTotalEnCop =  (from m in _context.Ordenes
+                                join p in _context.Prendas on e.IdPrendaFk equals p.Id
+                                where m.Id == e.IdDetalleOrdenFk
+                                select new
+                                {
+                                    subTotal = e.CantidadProducida*p.ValorUnitCop
+                                    
+                                }).Sum(z => z.subTotal),
+            ValorTotalEnUsd =  (from m in _context.Ordenes
+                                join p in _context.Prendas on e.IdPrendaFk equals p.Id
+                                where m.Id == e.IdDetalleOrdenFk
+                                select new
+                                {
+                                    subTotal = e.CantidadProducida*p.ValorUnitUsd
+                                    
+                                }).Sum(z => z.subTotal),
+        };
+
+        var entidad = await consulta.ToListAsync();
+        return entidad;
+    }
+    
 }

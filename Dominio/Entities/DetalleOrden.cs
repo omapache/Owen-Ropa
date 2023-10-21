@@ -1,7 +1,8 @@
 namespace Dominio.Entities;
 public class DetalleOrden : BaseEntity
 {
-    public int IdDetalleOrden { get; set; }
+    public int IdDetalleOrdenFk { get; set; }
+    public Orden Orden {get; set;}
     public int IdPrendaFk { get; set; }
     public Prenda Prenda {get; set;}
     public int CantidadProducir {get; set;}

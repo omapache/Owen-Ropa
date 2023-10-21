@@ -11,7 +11,7 @@ using Persistencia;
 namespace Persistencia.Data.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    [Migration("20231020222854_InitialCreate")]
+    [Migration("20231021020508_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -53,8 +53,10 @@ namespace Persistencia.Data.Migrations
                         .HasColumnType("Date")
                         .HasColumnName("fechaRegistro");
 
-                    b.Property<int>("IdCliente")
-                        .HasColumnType("int")
+                    b.Property<string>("IdCliente")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar")
                         .HasColumnName("idCliente");
 
                     b.Property<int>("IdMunicioFk")
@@ -133,9 +135,8 @@ namespace Persistencia.Data.Migrations
                     b.Property<int>("IdColorFk")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdDetalleOrden")
-                        .HasColumnType("int")
-                        .HasColumnName("idDetalleOrden");
+                    b.Property<int>("IdDetalleOrdenFk")
+                        .HasColumnType("int");
 
                     b.Property<int>("IdEstadoFk")
                         .HasColumnType("int");
@@ -143,18 +144,15 @@ namespace Persistencia.Data.Migrations
                     b.Property<int>("IdPrendaFk")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrdenId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdColorFk");
 
+                    b.HasIndex("IdDetalleOrdenFk");
+
                     b.HasIndex("IdEstadoFk");
 
                     b.HasIndex("IdPrendaFk");
-
-                    b.HasIndex("OrdenId");
 
                     b.ToTable("detalleOrden", (string)null);
                 });
@@ -831,6 +829,12 @@ namespace Persistencia.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Dominio.Entities.Orden", "Orden")
+                        .WithMany("DetalleOrdenes")
+                        .HasForeignKey("IdDetalleOrdenFk")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Dominio.Entities.Estado", "Estado")
                         .WithMany("DetalleOrdenes")
                         .HasForeignKey("IdEstadoFk")
@@ -843,13 +847,11 @@ namespace Persistencia.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Dominio.Entities.Orden", null)
-                        .WithMany("DetalleOrdenes")
-                        .HasForeignKey("OrdenId");
-
                     b.Navigation("Color");
 
                     b.Navigation("Estado");
+
+                    b.Navigation("Orden");
 
                     b.Navigation("Prenda");
                 });

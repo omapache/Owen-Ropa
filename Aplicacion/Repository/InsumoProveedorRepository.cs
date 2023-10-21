@@ -41,4 +41,26 @@ public class InsumoProveedorRepository : GenericRepo<InsumoProveedor>, IInsumoPr
 
         return (totalRegistros, registros);
     }
+    public async Task<object> Consulta6()
+    {
+        var consulta = 
+        from e in _context.InsumoProveedores
+
+        select new
+        {
+            Proveedor = e.Proveedor.Nombre,
+            insumos = (from m in _context.Insumos
+                        where m.Id == e.IdInsumoFk
+                        select new
+                        {
+                            Nombre = m.Nombre,
+                            ValorUnitario = m.ValorUnitario,
+                            StockMinimo = m.StockMinimo,
+                            StockMaximo = m.StockMaximo,
+                        }).ToList()
+        };
+
+        var entidad = await consulta.ToListAsync();
+        return entidad;
+    }
 }

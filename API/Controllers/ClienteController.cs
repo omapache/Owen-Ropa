@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
-[Authorize]
-public class ClienteController : BaseApiController
+/* [Authorize]
+ */public class ClienteController : BaseApiController
 {
     private readonly IUnitOfWork unitofwork;
     private readonly  IMapper mapper;
@@ -52,7 +52,15 @@ public class ClienteController : BaseApiController
         var listEntidad = mapper.Map<List<ClienteDto>>(entidad.registros);
         return new Pager<ClienteDto>(listEntidad, entidad.totalRegistros, EntidadParams.PageIndex, EntidadParams.PageSize, EntidadParams.Search);
     }
-
+    [HttpGet("consulta4/{idCliente}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> Consulta4(string idCliente)
+    {
+        var entidad = await unitofwork.Clientes.Consulta4(idCliente);
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

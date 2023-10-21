@@ -41,4 +41,27 @@ public class VentaRepository : GenericRepo<Venta>, IVenta
 
         return (totalRegistros, registros);
     }
+    public async Task<object> Consulta7(string IdEmpleado)
+    {
+        var consulta = 
+        from e in _context.Ventas
+        join em in _context.Empleados on e.IdEmpleadoFk equals em.Id
+        where em.IdEmpleado.ToString().Contains(IdEmpleado)
+        select new
+        {
+            IdEmpleado= IdEmpleado,
+            NombreEmpleado= em.Nombre,
+            NroFactura = e.Id,
+            Fecha = e.Fecha,
+            total = (from m in _context.DetalleVentas
+                    where m.IdVentaFk == e.Id
+                    select new
+                    {
+                        SubTotal = (m.Cantidad * m.ValorUnitario)
+                    }).Sum(x => x.SubTotal)
+        };
+
+        var entidad = await consulta.ToListAsync();
+        return entidad;
+    }
 }

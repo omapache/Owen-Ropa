@@ -1,4 +1,4 @@
-# Caso Safe Clothing
+# Proyecto Caso Safe Clothing
 
 Este proyecto proporciona una API que permite llevar el control, registro y seguimiento de la producción de prendas de seguridad industrial.
 

@@ -10,8 +10,8 @@ namespace API.Controllers;
 
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
-/* [Authorize]
- */public class CargoController : BaseApiController
+[Authorize]
+public class CargoController : BaseApiController
 {
     private readonly IUnitOfWork unitofwork;
     private readonly  IMapper mapper;
